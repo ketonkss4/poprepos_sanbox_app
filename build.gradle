@@ -23,6 +23,7 @@ allprojects {
 
     ext {
         androidX_version = '1.0.2'
+        navX_version = '2.0.0'
         roomX_version = '2.0.0-rc01'
         lifecycleX_version = '2.0.0'
         constraintlayoutX_version = '1.1.3'
