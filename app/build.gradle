@@ -7,7 +7,13 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: "kotlin-kapt"
 
 android {
+
+    dataBinding {
+        enabled = true
+    }
+
     compileSdkVersion 28
+
     defaultConfig {
         applicationId "com.pmd.droidexihibition.popularreposapp"
         minSdkVersion 21
@@ -28,11 +34,14 @@ dependencies {
     //androidx
     implementation "androidx.appcompat:appcompat:$androidX_version"
     implementation "androidx.lifecycle:lifecycle-runtime:$lifecycleX_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycleX_version"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleX_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayoutX_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$navX_version"
     implementation "androidx.navigation:navigation-ui-ktx:$navX_version"
     implementation "androidx.room:room-runtime:$roomX_version"
     kapt "androidx.room:room-compiler:$roomX_version"
+    kapt 'com.android.databinding:compiler:3.1.4'
 
     //kotlin
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

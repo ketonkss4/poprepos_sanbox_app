@@ -7,6 +7,6 @@
     <fragment
         android:id="@+id/repoSearchView"
         tools:layout="@layout/repo_search_view"
-        android:name="com.pmd.droidexihibition.popularreposapp.ui.RepoSearchView"
+        android:name="com.pmd.droidexihibition.popularreposapp.ui.RepoSearchFragment"
         android:label="RepoSearchView" />
 </navigation>

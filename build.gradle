@@ -25,7 +25,7 @@ allprojects {
         androidX_version = '1.0.2'
         navX_version = '2.0.0'
         roomX_version = '2.0.0-rc01'
-        lifecycleX_version = '2.0.0'
+        lifecycleX_version = '2.0.0-rc01'
         constraintlayoutX_version = '1.1.3'
         butterKnife_version = '9.0.0-rc1'
         coroutines_version = '1.1.1'
