@@ -21,7 +21,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "int", "REPO_SEARCH_LIMIT", '3'
+        buildConfigField "String", "API_BASE_URL", "https://api.github.com/"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -44,7 +47,7 @@ dependencies {
     kapt 'com.android.databinding:compiler:3.1.4'
 
     //kotlin
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
@@ -59,6 +62,14 @@ dependencies {
     //butterknife
     implementation "com.jakewharton:butterknife:$butterKnife_version"
     kapt "com.jakewharton:butterknife-compiler:$butterKnife_version"
+
+    //okhttp
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    //retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-experimental-adapter:1.0.0'
 
     //gson
     implementation 'com.google.code.gson:gson:2.8.5'
