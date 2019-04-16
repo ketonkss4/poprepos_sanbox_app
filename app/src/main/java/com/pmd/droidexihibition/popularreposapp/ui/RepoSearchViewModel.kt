@@ -16,34 +16,36 @@ class RepoSearchViewModel @Inject constructor(
     override val dispatchers: AppDispatchers
 ) : CoroutineScopedViewModel() {
 
-    private lateinit var searchInput: String
+    private val searchInput: MutableLiveData<String> = MutableLiveData()
 
-    private lateinit var currentSearchLiveData: LiveData<List<PopRepo>>
-
-    val repoList: LiveData<List<PopUiRepo>> =
-        Transformations.switchMap(currentSearchLiveData) { searchResults ->
-            val repoList = searchResults.map {
-                PopUiRepo(
-                    it.name,
-                    it.html_url,
-                    it.description,
-                    it.stargazers_count
-                )
-            }
-            val mutableLiveData = MutableLiveData<List<PopUiRepo>>()
-            mutableLiveData.value = repoList
-            mutableLiveData
+    private val repoList: LiveData<List<PopRepo>?> =
+        Transformations.switchMap(searchInput) { searchText ->
+            repository.getRepoLiveData(searchText)
         }
 
+    val repoViewLiveData: LiveData<List<PopUiRepo>> = Transformations.switchMap(repoList) { searchResults ->
+        val repoList = searchResults?.map {
+            PopUiRepo(
+                it.name,
+                it.html_url,
+                it.description,
+                it.stargazers_count
+            )
+        }
+        val mutableLiveData = MutableLiveData<List<PopUiRepo>>()
+        mutableLiveData.value = repoList
+        mutableLiveData
+    }
+
     fun onUpdateSearchInput(textInput: String) {
-        searchInput = textInput
+        searchInput.value = textInput
     }
 
     fun onSearchClick() {
-        if (searchInput.isBlank()) return
-        launch {
-            currentSearchLiveData = repository.getRepositories(searchInput)
-
+        searchInput.value?.let { searchText ->
+            launch(dispatchers.ioDispatcher()) {
+                repository.searchReposAsync(searchText)
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.pmd.droidexihibition.popularreposapp.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -12,22 +13,20 @@ class Repository @Inject constructor(
     private val useCase: RepoUseCase
 ) {
 
-    suspend fun getRepositories(searchText: String): LiveData<List<PopRepo>> {
-       val repoLiveData = Transformations.switchMap(localDataSource.getAllOrganizations()) { organizations ->
+    fun getRepoLiveData(searchText: String): LiveData<List<PopRepo>> {
+        return Transformations.switchMap(localDataSource.getAllOrganizationsWithRepos()) { organizations ->
             val repoLiveData = MutableLiveData<List<PopRepo>>()
-            val targetOrganization = organizations
-                .filter { gitOrganization -> gitOrganization.name == searchText }
-                .firstOrNull()
+            val targetOrganization = organizations.firstOrNull { gitOrganization -> gitOrganization.organization.name == searchText }
             if (targetOrganization != null) {
-                repoLiveData.value = targetOrganization.popularRepos
+                repoLiveData.value = targetOrganization.popRepos
             } else {
                 repoLiveData.value = emptyList()
             }
             repoLiveData
         }
-
-        if(repoLiveData.value.isNullOrEmpty()) useCase.performAsync(searchText)
-        return repoLiveData
     }
 
+    suspend fun searchReposAsync(searchText: String) {
+        useCase.performAsync(searchText)
+    }
 }

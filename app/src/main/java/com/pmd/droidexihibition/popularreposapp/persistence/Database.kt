@@ -1,27 +1,37 @@
 package com.pmd.droidexihibition.popularreposapp.persistence
 
+import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import com.pmd.droidexihibition.popularreposapp.persistence.model.GitOrganization
+import com.pmd.droidexihibition.popularreposapp.persistence.model.OrganizationWithRepos
 import com.pmd.droidexihibition.popularreposapp.persistence.model.PopRepo
+import java.lang.Exception
 import javax.inject.Inject
 
-class Database @Inject constructor(private val organizationDao: OrganizationDao) : RepoDataSource {
+class Database @Inject constructor(
+    private val organizationDao: OrganizationDao,
+    private val popRepoDao: PopRepoDao
+) : RepoDataSource {
 
-    override fun getAllOrganizations(): LiveData<List<GitOrganization>> {
-        return organizationDao.getAllOrganizations()
-    }
-
-    override fun findPopularReposForOrganization(searchText: String): LiveData<List<PopRepo>> {
-        return Transformations.switchMap(organizationDao.findOrganization(searchText)) { organization ->
-            val mutableLiveData = MutableLiveData<List<PopRepo>>()
-            mutableLiveData.value = organization.popularRepos
-            mutableLiveData
-        }
+    override fun getAllOrganizationsWithRepos(): LiveData<List<OrganizationWithRepos>> {
+        return organizationDao.getAllOrganizationsWithRepos()
     }
 
     override fun saveOrganization(organization: GitOrganization) {
-        organizationDao.insert(organization)
+        try {
+            organizationDao.insertOrganizations(organization)
+        } catch (e: Exception) {
+            Log.e(Database::class.java.simpleName, e.toString())
+        }
+    }
+
+    override fun saveRepositories(popRepos: List<PopRepo>) {
+        try {
+            popRepos.forEach {
+                popRepoDao.insertRepo(it)
+            }
+        } catch (e: Exception) {
+            Log.v(Database::class.java.simpleName, e.toString())
+        }
     }
 }
