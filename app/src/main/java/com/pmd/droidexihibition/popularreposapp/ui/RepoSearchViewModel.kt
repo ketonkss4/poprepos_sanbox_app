@@ -31,7 +31,7 @@ class RepoSearchViewModel @Inject constructor(
                 it.description,
                 it.stargazers_count
             )
-        }
+        }?.sortedByDescending { it.stars }
         val mutableLiveData = MutableLiveData<List<PopUiRepo>>()
         mutableLiveData.value = repoList
         mutableLiveData

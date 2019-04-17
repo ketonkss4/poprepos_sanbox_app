@@ -5,6 +5,8 @@ import android.content.Context
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.pmd.droidexihibition.popularreposapp.BuildConfig
 import com.pmd.droidexihibition.popularreposapp.api.GithubApiService
+import com.pmd.droidexihibition.popularreposapp.ui.webview.ChromeTabViewer
+import com.pmd.droidexihibition.popularreposapp.ui.webview.RepoWebViewer
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -17,7 +19,7 @@ import javax.inject.Singleton
 class AppModule(private val application: Application) {
 
     @Provides
-    fun getAppContext() : Context {
+    fun getAppContext(): Context {
         return application
     }
 
@@ -41,6 +43,7 @@ class AppModule(private val application: Application) {
         return httpClientBuilder.build()
     }
 
+    @Provides
+    fun providesWebView(): RepoWebViewer = ChromeTabViewer()
 
-
-    }
+}

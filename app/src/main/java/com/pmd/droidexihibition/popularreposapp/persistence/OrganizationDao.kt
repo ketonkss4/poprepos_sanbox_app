@@ -1,13 +1,9 @@
 package com.pmd.droidexihibition.popularreposapp.persistence
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.pmd.droidexihibition.popularreposapp.persistence.model.GitOrganization
 import com.pmd.droidexihibition.popularreposapp.persistence.model.OrganizationWithRepos
-import com.pmd.droidexihibition.popularreposapp.persistence.model.PopRepo
 
 @Dao
 interface OrganizationDao {
@@ -17,6 +13,7 @@ interface OrganizationDao {
     @Query("SELECT * FROM Organizations")
     fun getAllOrganizations(): LiveData<List<GitOrganization>>
 
+    @Transaction
     @Query("SELECT * FROM Organizations")
     fun getAllOrganizationsWithRepos(): LiveData<List<OrganizationWithRepos>>
 

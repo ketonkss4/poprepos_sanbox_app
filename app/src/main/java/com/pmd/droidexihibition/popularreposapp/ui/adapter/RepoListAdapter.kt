@@ -2,11 +2,14 @@ package com.pmd.droidexihibition.popularreposapp.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.pmd.droidexihibition.popularreposapp.R
+import com.pmd.droidexihibition.popularreposapp.databinding.RepoListItemBinding
+import com.pmd.droidexihibition.popularreposapp.ui.RepoActionListener
 import com.pmd.droidexihibition.popularreposapp.ui.model.PopUiRepo
 
-class RepoListAdapter : RecyclerView.Adapter<PopRepoViewHolder>() {
+class RepoListAdapter(private val actionListener: RepoActionListener) : RecyclerView.Adapter<PopRepoViewHolder>() {
 
     private val repoList: ArrayList<PopUiRepo> = ArrayList()
 
@@ -17,8 +20,10 @@ class RepoListAdapter : RecyclerView.Adapter<PopRepoViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): PopRepoViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.repo_list_item, null)
-        return PopRepoViewHolder(view)
+        val binding: RepoListItemBinding =
+            DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.repo_list_item, parent, false)
+        binding.repoListActionListener = actionListener
+        return PopRepoViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
