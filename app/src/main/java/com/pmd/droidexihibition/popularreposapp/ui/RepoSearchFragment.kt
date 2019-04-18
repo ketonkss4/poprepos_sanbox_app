@@ -120,7 +120,7 @@ class RepoSearchFragment : Fragment(), RepoActionListener {
 
     override fun onRepoItemClick(repoLink: String) {
         activity?.let {
-            webView.showInWebView(it.applicationContext, Uri.parse(repoLink))
+            webView.showInWebView(it, Uri.parse(repoLink))
         }
     }
 }

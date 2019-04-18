@@ -4,5 +4,5 @@ import android.content.Context
 import android.net.Uri
 
 interface RepoWebViewer {
-    fun showInWebView(appContext: Context, uri: Uri)
+    fun showInWebView(activityContext: Context, uri: Uri)
 }
