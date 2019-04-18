@@ -35,7 +35,7 @@ class RepoSearchViewModel @Inject constructor(
 
     private val repoList: LiveData<List<PopRepo>?> =
         Transformations.switchMap(searchInput) { searchText ->
-            repository.getRepoLiveData(searchText)
+            repository.getRepoLiveData(searchText.toLowerCase())
         }
 
     val repoViewLiveData: LiveData<List<PopUiRepo>> = Transformations.switchMap(repoList) { searchResults ->
@@ -66,7 +66,7 @@ class RepoSearchViewModel @Inject constructor(
         searchInput.value?.let { searchText ->
             isInProgressObservable.set(View.VISIBLE)
             launch(dispatchers.ioDispatcher()) {
-                val result = repository.searchReposAsync(searchText)
+                val result = repository.searchReposAsync(searchText.toLowerCase())
                 when (result) {
                     is SearchError -> {
                         errorObservable.onNext(result)
