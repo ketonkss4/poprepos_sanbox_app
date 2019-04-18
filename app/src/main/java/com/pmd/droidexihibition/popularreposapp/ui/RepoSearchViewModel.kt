@@ -1,5 +1,6 @@
 package com.pmd.droidexihibition.popularreposapp.ui
 
+import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -8,15 +9,25 @@ import com.pmd.droidexihibition.popularreposapp.concurrency.CoroutineScopedViewM
 import com.pmd.droidexihibition.popularreposapp.persistence.model.PopRepo
 import com.pmd.droidexihibition.popularreposapp.repository.Repository
 import com.pmd.droidexihibition.popularreposapp.ui.model.PopUiRepo
+import com.pmd.droidexihibition.popularreposapp.ui.model.SearchError
+import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val CURRENT_SEARCH_TEXT = "CURRENT_SEARCH_TEXT"
+
+/**
+ * Keeps the view state of the search view and update the ui via databinding
+ * and live data subscription
+ */
 class RepoSearchViewModel @Inject constructor(
     private val repository: Repository,
     override val dispatchers: AppDispatchers
 ) : CoroutineScopedViewModel() {
 
-    private val searchInput: MutableLiveData<String> = MutableLiveData()
+    private var searchInput: MutableLiveData<String> = MutableLiveData()
+    val errorObservable = PublishSubject.create<SearchError>()
+
 
     private val repoList: LiveData<List<PopRepo>?> =
         Transformations.switchMap(searchInput) { searchText ->
@@ -31,21 +42,41 @@ class RepoSearchViewModel @Inject constructor(
                 it.description,
                 it.stargazers_count
             )
-        }?.sortedByDescending { it.stars }
+        }?.sortedByDescending { it.stars } ?: emptyList()
         val mutableLiveData = MutableLiveData<List<PopUiRepo>>()
         mutableLiveData.value = repoList
         mutableLiveData
     }
 
     fun onUpdateSearchInput(textInput: String) {
-        searchInput.value = textInput
+        if (textInput != searchInput.value) searchInput.value = textInput
     }
 
+    /**
+     * Databinding method initiates an api request on search input upon
+     * explicit user request
+     * this is to limit excessive network use.
+     */
     fun onSearchClick() {
         searchInput.value?.let { searchText ->
             launch(dispatchers.ioDispatcher()) {
-                repository.searchReposAsync(searchText)
+                val result = repository.searchReposAsync(searchText)
+                when (result) {
+                    is SearchError -> {
+                        errorObservable.onNext(result)
+                    }
+                }
             }
+        }
+    }
+
+    // view model should keep its own state between orientation changes
+    // however if the application is killed by the system, state will need
+    // to be restored using the saved instance state
+    fun restoreInstanceState(savedInstanceState: Bundle?) {
+        val savedSearch = savedInstanceState?.getString(CURRENT_SEARCH_TEXT)
+        savedSearch?.let {
+            if (it != searchInput.value) searchInput.value = it
         }
     }
 

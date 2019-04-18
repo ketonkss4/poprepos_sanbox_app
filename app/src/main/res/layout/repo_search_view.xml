@@ -16,6 +16,7 @@
         android:layout_height="match_parent"
         android:background="@color/colorPrimaryDark"
         android:focusable="true"
+        android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true">
 
         <View
@@ -31,6 +32,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
+            android:id="@+id/search_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
@@ -63,7 +65,7 @@
             app:layout_constraintTop_toTopOf="@id/search_viewbox" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            android:id="@+id/repo_list_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"

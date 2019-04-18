@@ -1,11 +1,9 @@
 package com.pmd.droidexihibition.popularreposapp.persistence
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import com.pmd.droidexihibition.popularreposapp.persistence.model.GitOrganization
 import com.pmd.droidexihibition.popularreposapp.persistence.model.OrganizationWithRepos
 import com.pmd.droidexihibition.popularreposapp.persistence.model.PopRepo
-import java.lang.Exception
 import javax.inject.Inject
 
 class Database @Inject constructor(
@@ -18,20 +16,12 @@ class Database @Inject constructor(
     }
 
     override fun saveOrganization(organization: GitOrganization) {
-        try {
-            organizationDao.insertOrganizations(organization)
-        } catch (e: Exception) {
-            Log.e(Database::class.java.simpleName, e.toString())
-        }
+        organizationDao.insertOrganizations(organization)
     }
 
     override fun saveRepositories(popRepos: List<PopRepo>) {
-        try {
-            popRepos.forEach {
-                popRepoDao.insertRepo(it)
-            }
-        } catch (e: Exception) {
-            Log.v(Database::class.java.simpleName, e.toString())
+        popRepos.forEach {
+            popRepoDao.insertRepo(it)
         }
     }
 }

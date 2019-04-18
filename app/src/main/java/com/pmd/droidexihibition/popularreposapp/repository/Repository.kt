@@ -1,11 +1,11 @@
 package com.pmd.droidexihibition.popularreposapp.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.pmd.droidexihibition.popularreposapp.persistence.RepoDataSource
 import com.pmd.droidexihibition.popularreposapp.persistence.model.PopRepo
+import com.pmd.droidexihibition.popularreposapp.ui.model.Result
 import javax.inject.Inject
 
 class Repository @Inject constructor(
@@ -26,7 +26,7 @@ class Repository @Inject constructor(
         }
     }
 
-    suspend fun searchReposAsync(searchText: String) {
-        useCase.performAsync(searchText)
+    suspend fun searchReposAsync(searchText: String) : Result<Boolean> {
+        return useCase.performAsync(searchText)
     }
 }
