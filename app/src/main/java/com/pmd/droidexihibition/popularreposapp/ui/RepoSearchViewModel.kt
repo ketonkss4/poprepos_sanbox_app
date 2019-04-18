@@ -1,6 +1,8 @@
 package com.pmd.droidexihibition.popularreposapp.ui
 
 import android.os.Bundle
+import android.view.View
+import androidx.databinding.ObservableInt
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -12,7 +14,9 @@ import com.pmd.droidexihibition.popularreposapp.ui.model.PopUiRepo
 import com.pmd.droidexihibition.popularreposapp.ui.model.SearchError
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
+
 
 const val CURRENT_SEARCH_TEXT = "CURRENT_SEARCH_TEXT"
 
@@ -27,7 +31,7 @@ class RepoSearchViewModel @Inject constructor(
 
     private var searchInput: MutableLiveData<String> = MutableLiveData()
     val errorObservable = PublishSubject.create<SearchError>()
-
+    val isInProgressObservable = ObservableInt(View.GONE)
 
     private val repoList: LiveData<List<PopRepo>?> =
         Transformations.switchMap(searchInput) { searchText ->
@@ -58,13 +62,18 @@ class RepoSearchViewModel @Inject constructor(
      * this is to limit excessive network use.
      */
     fun onSearchClick() {
+        //TODO cancel current search if new one requested before previous is complete
         searchInput.value?.let { searchText ->
+            isInProgressObservable.set(View.VISIBLE)
             launch(dispatchers.ioDispatcher()) {
                 val result = repository.searchReposAsync(searchText)
                 when (result) {
                     is SearchError -> {
                         errorObservable.onNext(result)
                     }
+                }
+                withContext(dispatchers.uiDispatcher()) {
+                    isInProgressObservable.set(View.GONE)
                 }
             }
         }
