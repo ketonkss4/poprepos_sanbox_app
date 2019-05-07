@@ -10,6 +10,10 @@ API call should be scoped to return 3 repos by ascending value of stars
 Display search result to UI
 Navigate to repo online using in-app web display on user click
 
+
+## Architecture Diagram 
+![App Diagram](https://i.ibb.co/Q8SrDT8/App-Diagram.png)
+
 ## Conceptual Breakdown
 I believe the following components can be used to implement the application:
 ### Search/Results View
