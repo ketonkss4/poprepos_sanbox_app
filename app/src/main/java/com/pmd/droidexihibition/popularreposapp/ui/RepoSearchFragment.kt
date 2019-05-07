@@ -3,6 +3,7 @@ package com.pmd.droidexihibition.popularreposapp.ui
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,8 +87,6 @@ class RepoSearchFragment : Fragment(), RepoActionListener {
         return searchViewBinding.root
     }
 
-    //TODO still need to figure out saving state with navigation architecture currently
-    //TODO state is lost by onResume
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let { instanceState ->
